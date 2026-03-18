@@ -21,21 +21,21 @@ const getDayVerse = () => {
 };
 
 const INSIGHT_TABS = [
-  { id: "explain", label: "Explanation", icon: "✦" },
-  { id: "history", label: "History", icon: "◈" },
-  { id: "commentary", label: "Commentary", icon: "◉" },
-  { id: "apply", label: "Apply Today", icon: "✿" },
+  { id: "explain", label: "What It Means", icon: "✦" },
+  { id: "history", label: "The Background", icon: "◈" },
+  { id: "story", label: "A Story", icon: "◉" },
+  { id: "apply", label: "Your Challenge Today", icon: "✿" },
 ];
 
 const PROMPTS = {
   explain: (v) =>
-    `You are a warm, knowledgeable Bible teacher. Explain the meaning of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") in 3-4 sentences. Be clear, accessible, and spiritually enriching. Prose only — no bullet points, no headers.`,
+    `You are a warm, friendly pastor giving a Sunday sermon. In 3-4 simple sentences, explain what ${v.book} ${v.chapter}:${v.verse} ("${v.text}") means. Use everyday words and a conversational tone — like you're speaking directly to someone in the pew. No theological jargon. Prose only — no bullet points.`,
   history: (v) =>
-    `You are a biblical historian. In 3-4 sentences, give the historical and cultural background of ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Who wrote it, when, and what was happening in that era? Prose only — no bullet points.`,
-  commentary: (v) =>
-    `You are a theological scholar familiar with the great preachers and thinkers of church history. In 4-5 sentences, share how influential Christian voices — such as Spurgeon, Augustine, Wesley, Calvin, or Luther — have interpreted or been inspired by ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Draw from their actual writings and sermons where possible. Prose only — no bullet points.`,
+    `You are a warm pastor giving a Sunday sermon. In 3-4 simple sentences, share the historical background of ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Help the listener understand what life was like when this was written and why it mattered. Keep it simple, vivid, and interesting. Prose only — no bullet points.`,
+  story: (v) =>
+    `You are a pastor in the middle of a sermon. Share a short, moving, real-world story or anecdote (3-4 sentences) that brings the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") to life. It could be a story about an ordinary person, a moment of grace, or a situation anyone might face. Make it emotionally resonant and denomination-neutral. Prose only — no bullet points.`,
   apply: (v) =>
-    `You are a thoughtful pastor. In 3-4 sentences, give one specific, practical way a person can apply the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") to their life today. Make it concrete and actionable — something they can actually do or think about before tonight. Prose only — no bullet points.`,
+    `You are a pastor closing a sermon. In 3-4 simple, direct sentences, give the listener one specific and practical challenge they can act on today based on ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Make it something concrete and doable before the day is over. Speak directly to them — warm but motivating. Prose only — no bullet points.`,
 };
 
 export default function BibleApp() {
@@ -47,7 +47,7 @@ export default function BibleApp() {
   const [usageCount, setUsageCount] = useState(() => {
     try { return parseInt(localStorage.getItem("bv_usage") || "0"); } catch { return 0; }
   });
-  const FREE_LIMIT = 3;
+  const FREE_LIMIT = 1;
   const [isPro, setIsPro] = useState(() => {
     try { return localStorage.getItem("bv_pro") === "true"; } catch { return false; }
   });
@@ -138,7 +138,7 @@ export default function BibleApp() {
         {/* Header */}
         <header style={{ textAlign: "center", padding: "52px 0 40px" }}>
           <div style={{ fontSize: 11, letterSpacing: "0.35em", color: "#a08840", textTransform: "uppercase", marginBottom: 14 }}>
-            King James Version
+            KJV
           </div>
           <h1 style={{
             fontSize: "clamp(28px, 6vw, 44px)",
@@ -148,7 +148,7 @@ export default function BibleApp() {
             color: "#f0e6d0",
             lineHeight: 1.1,
           }}>
-            Verse of the Day
+            Your Daily Devotional
           </h1>
           <div style={{
             width: 48, height: 1, background: "linear-gradient(90deg, transparent, #a08840, transparent)",
@@ -200,20 +200,14 @@ export default function BibleApp() {
         </div>
 
         {/* Usage indicator */}
-        {remaining <= FREE_LIMIT && (
+        {!isPro && (
           <div style={{ textAlign: "center", fontSize: 12, color: "#6a5a3a", marginBottom: 20, letterSpacing: "0.06em" }}>
-            {remaining > 0 ? `${remaining} free insight${remaining !== 1 ? "s" : ""} remaining today` : "Upgrade for unlimited insights"}
+            {remaining > 0 ? "Tap to begin today's devotional — first insight is free" : "Subscribe to continue today's devotional"}
           </div>
         )}
 
         {/* AI Insight Tabs */}
         <div style={{ marginBottom: 4 }}>
-          <div style={{
-            fontSize: 10, letterSpacing: "0.3em", color: "#6a5a3a", textTransform: "uppercase",
-            textAlign: "center", marginBottom: 16,
-          }}>
-            AI Insights — tap to explore
-          </div>
           <div style={{
             display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8,
           }}>
@@ -306,10 +300,10 @@ export default function BibleApp() {
             >
               <div style={{ fontSize: 32, marginBottom: 16 }}>✦</div>
               <h2 style={{ fontSize: 22, fontWeight: 400, margin: "0 0 12px", color: "#f0e6d0" }}>
-                Unlock Unlimited Insights
+                Continue Your Devotional
               </h2>
               <p style={{ fontSize: 14, color: "#8a7a5a", lineHeight: 1.7, margin: "0 0 28px" }}>
-                You've used your 3 free daily insights. Upgrade to explore every verse, every day — with no limits.
+                You've had a taste of today's devotional. Subscribe to unlock the full sermon experience — every day, for less than a coffee a month.
               </p>
 
               <div style={{
