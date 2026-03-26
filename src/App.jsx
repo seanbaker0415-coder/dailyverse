@@ -16,20 +16,23 @@ const DAILY_VERSES = [
 const getDayVerse = () => DAILY_VERSES[new Date().getDay() % DAILY_VERSES.length];
 
 const INSIGHT_TABS = [
-  { id: "explain", label: "What It Means", icon: "✦", proOnly: false },
+  { id: "story", label: "A Story", icon: "◉", proOnly: false },
+  { id: "explain", label: "What It Means", icon: "✦", proOnly: true },
   { id: "history", label: "The Background", icon: "◈", proOnly: true },
-  { id: "story", label: "A Story", icon: "◉", proOnly: true },
+  { id: "question", label: "The Question", icon: "✧", proOnly: true },
   { id: "apply", label: "Your Challenge Today", icon: "✿", proOnly: true },
   { id: "prayer", label: "Pray With This", icon: "🙏", proOnly: true },
 ];
 
 const PROMPTS = {
+  story: (v) =>
+    `Write a short real-world story (3-4 sentences) that illustrates the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Make it about an ordinary person in an everyday situation — not a missionary or celebrity. Write in third person — do not use "I" or "we". Keep it grounded and genuine, not sentimental or over-dramatic. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   explain: (v) =>
     `Write 3-4 sentences explaining what ${v.book} ${v.chapter}:${v.verse} ("${v.text}") means. Write in third person — do not use "I" or "we". Use plain, everyday language that any adult can understand. Be warm and clear, not preachy. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   history: (v) =>
     `Write 3-4 sentences describing the historical background of ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Who wrote it, when, and what was happening at that time? Write in third person — do not use "I" or "we". Keep it simple and vivid. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
-  story: (v) =>
-    `Write a short real-world story (3-4 sentences) that illustrates the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Make it about an ordinary person in an everyday situation — not a missionary or celebrity. Write in third person — do not use "I" or "we". Keep it grounded and genuine, not sentimental or over-dramatic. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
+  question: (v) =>
+    `Write a single, thought-provoking question (2-3 sentences max) that a person can carry with them all day based on ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Make it personal and introspective — something that gently challenges how they see their own life. Speak directly to the reader using "you". No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   apply: (v) =>
     `Write 3-4 sentences giving one specific, practical thing a person can do today based on ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Speak directly to the reader using "you". Make it concrete and doable — something simple they can actually do today. Keep it warm but direct. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   prayer: (v) =>
@@ -113,7 +116,7 @@ export default function BibleApp() {
   };
 
   const handleShare = async () => {
-    const shareText = `"${verse.text}"\n— ${verse.book} ${verse.chapter}:${verse.verse}\n\nGet your daily devotional at DailyVerse 👇\n${APP_URL}`;
+    const shareText = `"${verse.text}"\n— ${verse.book} ${verse.chapter}:${verse.verse}\n\nGet your free daily devotional at DailyVerse 👇\n${APP_URL}`;
     try {
       if (navigator.share) {
         await navigator.share({ text: shareText });
@@ -188,7 +191,7 @@ export default function BibleApp() {
             fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 400, margin: 0,
             letterSpacing: "-0.01em", color: "#f0e6d0", lineHeight: 1.15,
           }}>
-            Church in Your Pocket
+            DailyVerse
           </h1>
           <div style={{ width: 48, height: 1, background: "linear-gradient(90deg, transparent, #a08840, transparent)", margin: "16px auto 0" }} />
         </header>
@@ -236,7 +239,7 @@ export default function BibleApp() {
               transition: "all 0.2s ease",
             }}
           >
-            {shareMsg || "✦ Share Today's Verse"}
+            {shareMsg || "Know someone who needs this today? Share →"}
           </button>
         </div>
 
@@ -247,10 +250,11 @@ export default function BibleApp() {
           </div>
         )}
 
-        {/* Insight Tabs — 2x3 grid with prayer at bottom spanning full width */}
+        {/* Insight Tabs — 2x2 grid for first 4, then Question + Prayer full width */}
         <div style={{ marginBottom: 4 }}>
+          {/* 2x2 grid: Story, What It Means, The Background, Your Challenge */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10, marginBottom: 10 }}>
-            {INSIGHT_TABS.filter(t => t.id !== "prayer").map(tab => (
+            {INSIGHT_TABS.filter(t => t.id !== "question" && t.id !== "prayer").map(tab => (
               <button
                 key={tab.id}
                 onClick={() => fetchInsight(tab.id)}
@@ -269,44 +273,43 @@ export default function BibleApp() {
                 }}
               >
                 {tab.proOnly && !isPro && (
-                  <div style={{
-                    position: "absolute", top: 6, right: 8,
-                    fontSize: 9, color: "#a08840", letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}>Pro</div>
+                  <div style={{ position: "absolute", top: 6, right: 8, fontSize: 9, color: "#a08840", letterSpacing: "0.1em", textTransform: "uppercase" }}>Pro</div>
                 )}
                 <span style={{ fontSize: 18 }}>{tab.icon}</span>
                 <span style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1.3 }}>{tab.label}</span>
               </button>
             ))}
           </div>
-          {/* Prayer — full width at bottom */}
-          <button
-            onClick={() => fetchInsight("prayer")}
-            style={{
-              width: "100%",
-              background: activeTab === "prayer"
-                ? "linear-gradient(145deg, rgba(160,136,64,0.25), rgba(120,96,32,0.2))"
-                : "linear-gradient(145deg, rgba(30,24,14,0.8), rgba(20,16,10,0.9))",
-              border: activeTab === "prayer"
-                ? "1px solid rgba(160,136,64,0.5)"
-                : "1px solid rgba(160,136,64,0.12)",
-              borderRadius: 12, padding: "16px 12px", cursor: "pointer",
-              color: activeTab === "prayer" ? "#d4a840" : "#7a6a4a",
-              textAlign: "center", transition: "all 0.2s ease",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-              position: "relative",
-            }}
-          >
-            {!isPro && (
-              <div style={{
-                position: "absolute", top: 6, right: 12,
-                fontSize: 9, color: "#a08840", letterSpacing: "0.1em", textTransform: "uppercase",
-              }}>Pro</div>
-            )}
-            <span style={{ fontSize: 18 }}>🙏</span>
-            <span style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase" }}>Pray With This</span>
-          </button>
+          {/* The Question — full width */}
+          {["question", "prayer"].map(id => {
+            const tab = INSIGHT_TABS.find(t => t.id === id);
+            return (
+              <button
+                key={id}
+                onClick={() => fetchInsight(id)}
+                style={{
+                  width: "100%", marginBottom: 10,
+                  background: activeTab === id
+                    ? "linear-gradient(145deg, rgba(160,136,64,0.25), rgba(120,96,32,0.2))"
+                    : "linear-gradient(145deg, rgba(30,24,14,0.8), rgba(20,16,10,0.9))",
+                  border: activeTab === id
+                    ? "1px solid rgba(160,136,64,0.5)"
+                    : "1px solid rgba(160,136,64,0.12)",
+                  borderRadius: 12, padding: "16px 12px", cursor: "pointer",
+                  color: activeTab === id ? "#d4a840" : "#7a6a4a",
+                  textAlign: "center", transition: "all 0.2s ease",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                  position: "relative",
+                }}
+              >
+                {!isPro && (
+                  <div style={{ position: "absolute", top: 6, right: 12, fontSize: 9, color: "#a08840", letterSpacing: "0.1em", textTransform: "uppercase" }}>Pro</div>
+                )}
+                <span style={{ fontSize: 18 }}>{tab.icon}</span>
+                <span style={{ fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase" }}>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Insight Content */}
