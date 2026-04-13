@@ -13,7 +13,12 @@ const DAILY_VERSES = [
   { book: "Jeremiah", chapter: 29, verse: 11, text: "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end." },
 ];
 
-const getDayVerse = () => DAILY_VERSES[new Date().getDay() % DAILY_VERSES.length];
+const getDayOfYear = () => {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+};
+const getDayVerse = () => DAILY_VERSES[getDayOfYear() % DAILY_VERSES.length];
 
 const INSIGHT_TABS = [
   { id: "story", label: "A Story", icon: "◉", proOnly: false },
@@ -174,7 +179,7 @@ export default function BibleApp() {
         `,
       }} />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: 520, margin: "0 auto", padding: "0 20px 60px" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto", padding: "0 24px 60px" }}>
 
         {/* Header */}
         <header style={{ textAlign: "center", padding: "40px 0 24px" }}>
