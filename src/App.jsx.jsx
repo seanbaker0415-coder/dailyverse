@@ -165,6 +165,7 @@ export default function BibleApp() {
   return (
     <div style={{
       minHeight: "100vh",
+      width: "100%",
       background: "#0e0c09",
       fontFamily: "'Georgia', serif",
       color: "#e8dcc8",
@@ -411,7 +412,8 @@ export default function BibleApp() {
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-        * { box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body, #root { width: 100%; min-height: 100vh; background: #0e0c09; }
         button:hover { opacity: 0.85; }
       `}</style>
     </div>
