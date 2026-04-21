@@ -377,7 +377,7 @@ export default function BibleApp() {
                 background: "rgba(160,136,64,0.08)", border: "1px solid rgba(160,136,64,0.2)",
                 borderRadius: 12, padding: "18px", marginBottom: 20,
               }}>
-                <div style={{ fontSize: 26, fontWeight: 300, color: "#d4a840", marginBottom: 4 }}>$4.99</div>
+                <div style={{ fontSize: 26, fontWeight: 300, color: "#d4a840", marginBottom: 4 }}>$9.99</div>
                 <div style={{ fontSize: 11, color: "#8a7a5a", letterSpacing: "0.1em" }}>PER MONTH · CANCEL ANYTIME</div>
                 <div style={{ marginTop: 12, fontSize: 12, color: "#9a8a6a", lineHeight: 2 }}>
                   ✦ The full devotional, every day<br />
