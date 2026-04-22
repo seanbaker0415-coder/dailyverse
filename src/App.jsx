@@ -31,7 +31,7 @@ const INSIGHT_TABS = [
 
 const PROMPTS = {
   story: (v) =>
-    `Write a short real-world story (3-4 sentences) that illustrates the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}"). Make it about an ordinary person in an everyday situation — not a missionary or celebrity. Write in third person — do not use "I" or "we". Keep it grounded and genuine, not sentimental or over-dramatic. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
+    `Write a short story (4-5 sentences) in the style of Reader's Digest — the kind that feels true even if it isn't, warm but never saccharine, with a quiet insight that earns its ending rather than announcing it. It should illustrate the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") without ever stating the moral directly. Write about an ordinary person in a specific, grounded moment. Let the meaning arrive on its own. Third person only. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   explain: (v) =>
     `Write 3-4 sentences explaining what ${v.book} ${v.chapter}:${v.verse} ("${v.text}") means. Write in third person — do not use "I" or "we". Use plain, everyday language that any adult can understand. Be warm and clear, not preachy. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   history: (v) =>
@@ -181,6 +181,24 @@ export default function BibleApp() {
       }} />
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto", padding: "0 24px 60px" }}>
+
+        {/* Mother's Day Banner */}
+        <div style={{
+          background: "linear-gradient(135deg, rgba(160,136,64,0.15), rgba(120,80,60,0.1))",
+          border: "1px solid rgba(160,136,64,0.3)",
+          borderRadius: 10,
+          padding: "12px 20px",
+          textAlign: "center",
+          marginTop: 20,
+          marginBottom: -10,
+        }}>
+          <div style={{ fontSize: 13, color: "#d4a840", letterSpacing: "0.06em" }}>
+            ✦ &nbsp; Looking for a meaningful Mother's Day gift?
+            &nbsp;<a href="https://getyourdailyverse.com" style={{ color: "#d4a840", textDecoration: "underline" }}>
+              Share DailyVerse
+            </a> &nbsp; ✦
+          </div>
+        </div>
 
         {/* Header */}
         <header style={{ textAlign: "center", padding: "40px 0 24px" }}>
