@@ -191,12 +191,12 @@ export default function BibleApp() {
           textAlign: "center",
           marginTop: 20,
           marginBottom: -10,
-        }}>
+          cursor: "pointer",
+        }} onClick={handleCheckout}>
           <div style={{ fontSize: 13, color: "#d4a840", letterSpacing: "0.06em" }}>
-            ✦ &nbsp; Looking for a meaningful Mother's Day gift?
-            &nbsp;<a href="https://getyourdailyverse.com" style={{ color: "#d4a840", textDecoration: "underline" }}>
-              Share DailyVerse
-            </a> &nbsp; ✦
+            ✦ &nbsp; Looking for a meaningful Mother's Day gift? &nbsp;
+            <span style={{ textDecoration: "underline" }}>Gift DailyVerse →</span>
+            &nbsp; ✦
           </div>
         </div>
 
@@ -362,6 +362,39 @@ export default function BibleApp() {
                 </p>
               </>
             )}
+          </div>
+        )}
+
+        {/* Persistent bottom CTA for non-pro users */}
+        {!isPro && (
+          <div style={{
+            marginTop: 32,
+            background: "linear-gradient(145deg, rgba(40,32,20,0.6), rgba(28,22,14,0.7))",
+            border: "1px solid rgba(160,136,64,0.2)",
+            borderRadius: 14,
+            padding: "28px 24px",
+            textAlign: "center",
+          }}>
+            <div style={{ fontSize: 18, fontWeight: 400, color: "#f0e6d0", marginBottom: 8 }}>
+              Continue Your Devotional
+            </div>
+            <p style={{ fontSize: 13, color: "#8a7a5a", lineHeight: 1.7, margin: "0 0 16px" }}>
+              Unlock the full 6-part devotional every morning — for less than a coffee a month.
+            </p>
+            <div style={{ fontSize: 22, fontWeight: 300, color: "#d4a840", marginBottom: 4 }}>$9.99</div>
+            <div style={{ fontSize: 11, color: "#6a5a3a", letterSpacing: "0.1em", marginBottom: 20 }}>PER MONTH · CANCEL ANYTIME · 7-DAY FREE TRIAL</div>
+            <button
+              onClick={handleCheckout}
+              style={{
+                width: "100%", padding: "14px",
+                background: "linear-gradient(135deg, #c4982a, #a07820)",
+                border: "none", borderRadius: 10, cursor: "pointer",
+                color: "#1a1205", fontSize: 15, fontWeight: 600,
+                letterSpacing: "0.05em", fontFamily: "Georgia, serif",
+              }}
+            >
+              {checkoutLoading ? "Redirecting..." : "Start Free 7-Day Trial"}
+            </button>
           </div>
         )}
 
