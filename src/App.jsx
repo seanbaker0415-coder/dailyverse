@@ -105,19 +105,9 @@ export default function BibleApp() {
     }
   }, []);
 
-  const handleCheckout = async () => {
-    setCheckoutLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/create-checkout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } catch {
-      alert("Something went wrong. Please try again.");
-    }
-    setCheckoutLoading(false);
+  const handleCheckout = () => {
+    const checkoutUrl = "https://buy.stripe.com/28E28k6CcbHc0oV2KfdQQ01";
+    window.location.href = checkoutUrl;
   };
 
   const handleShare = async () => {
