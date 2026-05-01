@@ -31,7 +31,7 @@ const INSIGHT_TABS = [
 
 const PROMPTS = {
   story: (v) =>
-    `Write a story of 3-4 paragraphs in the style of Frederick Buechner — literary, grounded, and quietly luminous. Buechner writes about ordinary people in ordinary moments, but finds the sacred hiding inside them without ever pointing at it directly. Take inspiration also from Anne Lamott's permission to be funny, self-aware, and honest. The story should feel completely true even if it isn't. It should illuminate the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") without ever naming it or moralizing. Write about a specific person in a specific moment — give them a name, a place, a small concrete detail that makes them real. Let the ending land quietly, like a door closing in another room. Third person only. No bullet points, no headers, no hashtags, no markdown formatting of any kind. Do not state any lesson or meaning explicitly.`,
+    `Write a story of 3-4 short paragraphs in the style of Frederick Buechner — literary, grounded, and quietly luminous. Buechner writes about ordinary people in ordinary moments, but finds the sacred hiding inside them without ever pointing at it directly. Take inspiration also from Anne Lamott's permission to be funny, self-aware, and honest. The story should feel completely true even if it isn't. It should illuminate the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") without ever naming it or moralizing. Write about a specific person in a specific moment — give them a name, a place, a small concrete detail that makes them real. Let the ending land quietly, like a door closing in another room. Keep each paragraph to 2-3 sentences maximum. Separate paragraphs with a blank line. Third person only. No title. No headline. No hashtags. No markdown formatting of any kind — no pound signs, no asterisks, no headers. Do not state any lesson or meaning explicitly.`,
   explain: (v) =>
     `Write 3-4 sentences explaining what ${v.book} ${v.chapter}:${v.verse} ("${v.text}") means. Write in third person — do not use "I" or "we". Use plain, everyday language that any adult can understand. Be warm and clear, not preachy. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   history: (v) =>
@@ -121,7 +121,7 @@ export default function BibleApp() {
     // Show email popup after 3 seconds for non-pro users
     const hasSeenPopup = localStorage.getItem("bv_seen_popup");
     if (!hasSeenPopup) {
-      setTimeout(() => setShowEmailPopup(true), 3000);
+      setTimeout(() => setShowEmailPopup(true), 8000);
     }
   }, []);
 
@@ -370,9 +370,23 @@ export default function BibleApp() {
                 <div style={{ fontSize: 10, letterSpacing: "0.3em", color: "#a08840", textTransform: "uppercase", marginBottom: 14 }}>
                   {INSIGHT_TABS.find(t => t.id === activeTab)?.label}
                 </div>
-                <p style={{ fontSize: 15, lineHeight: 1.85, color: "#d4c8aa", margin: 0, fontStyle: activeTab === "prayer" ? "italic" : "normal" }}>
-                  {content[activeTab]}
-                </p>
+                {activeTab === "story" ? (
+                  <div>
+                    {content[activeTab].split("\n\n").filter(p => p.trim()).map((paragraph, i) => (
+                      <p key={i} style={{
+                        fontSize: 15, lineHeight: 1.9, color: "#d4c8aa",
+                        margin: i === 0 ? "0 0 16px" : "0 0 16px",
+                        marginBottom: i === content[activeTab].split("\n\n").filter(p => p.trim()).length - 1 ? 0 : 16,
+                      }}>
+                        {paragraph.trim()}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p style={{ fontSize: 15, lineHeight: 1.85, color: "#d4c8aa", margin: 0, fontStyle: activeTab === "prayer" ? "italic" : "normal" }}>
+                    {content[activeTab]}
+                  </p>
+                )}
               </>
             )}
           </div>
