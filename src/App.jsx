@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const API_BASE = "https://dailyverse-backend-production.up.railway.app";
-const APP_URL = "https://dailyverse-eight.vercel.app";
+const APP_URL = "https://getyourdailyverse.com";
 
 const DAILY_VERSES = [
   { book: "John", chapter: 3, verse: 16, text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." },
@@ -31,7 +31,7 @@ const INSIGHT_TABS = [
 
 const PROMPTS = {
   story: (v) =>
-    `Write a short story (4-5 sentences) in the style of Reader's Digest — the kind that feels true even if it isn't, warm but never saccharine, with a quiet insight that earns its ending rather than announcing it. It should illustrate the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") without ever stating the moral directly. Write about an ordinary person in a specific, grounded moment. Let the meaning arrive on its own. Third person only. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
+    `Write a story of 3-4 paragraphs in the style of Frederick Buechner — literary, grounded, and quietly luminous. Buechner writes about ordinary people in ordinary moments, but finds the sacred hiding inside them without ever pointing at it directly. Take inspiration also from Anne Lamott's permission to be funny, self-aware, and honest. The story should feel completely true even if it isn't. It should illuminate the truth of ${v.book} ${v.chapter}:${v.verse} ("${v.text}") without ever naming it or moralizing. Write about a specific person in a specific moment — give them a name, a place, a small concrete detail that makes them real. Let the ending land quietly, like a door closing in another room. Third person only. No bullet points, no headers, no hashtags, no markdown formatting of any kind. Do not state any lesson or meaning explicitly.`,
   explain: (v) =>
     `Write 3-4 sentences explaining what ${v.book} ${v.chapter}:${v.verse} ("${v.text}") means. Write in third person — do not use "I" or "we". Use plain, everyday language that any adult can understand. Be warm and clear, not preachy. No bullet points, no headers, no hashtags, no markdown formatting of any kind.`,
   history: (v) =>
@@ -80,7 +80,16 @@ export default function BibleApp() {
   const [loading, setLoading] = useState({});
   const [showPaywall, setShowPaywall] = useState(false);
   const [usageCount, setUsageCount] = useState(() => {
-    try { return parseInt(localStorage.getItem("bv_usage") || "0"); } catch { return 0; }
+    try {
+      const savedDate = localStorage.getItem("bv_usage_date");
+      const today = new Date().toISOString().slice(0, 10);
+      if (savedDate !== today) {
+        localStorage.setItem("bv_usage", "0");
+        localStorage.setItem("bv_usage_date", today);
+        return 0;
+      }
+      return parseInt(localStorage.getItem("bv_usage") || "0");
+    } catch { return 0; }
   });
   const FREE_LIMIT = 1;
   const [isPro, setIsPro] = useState(() => {
@@ -89,6 +98,8 @@ export default function BibleApp() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [streak, setStreak] = useState(0);
   const [shareMsg, setShareMsg] = useState("");
+
+  const [showEmailPopup, setShowEmailPopup] = useState(false);
 
   useEffect(() => {
     // Update streak on load
@@ -102,6 +113,15 @@ export default function BibleApp() {
       try { localStorage.setItem("bv_pro", "true"); } catch {}
       setShowPaywall(false);
       window.history.replaceState({}, "", window.location.pathname);
+    }
+
+    // Auto-load story
+    fetchInsight("story");
+
+    // Show email popup after 3 seconds for non-pro users
+    const hasSeenPopup = localStorage.getItem("bv_seen_popup");
+    if (!hasSeenPopup) {
+      setTimeout(() => setShowEmailPopup(true), 3000);
     }
   }, []);
 
@@ -130,7 +150,10 @@ export default function BibleApp() {
       const newCount = usageCount + 1;
       if (newCount > FREE_LIMIT) { setShowPaywall(true); return; }
       setUsageCount(newCount);
-      try { localStorage.setItem("bv_usage", newCount); } catch {}
+      try {
+        localStorage.setItem("bv_usage", newCount);
+        localStorage.setItem("bv_usage_date", new Date().toISOString().slice(0, 10));
+      } catch {}
     }
 
     setActiveTab(tabId);
@@ -449,6 +472,90 @@ export default function BibleApp() {
           </div>
         )}
       </div>
+
+      {/* Email signup popup — shows after 3 seconds for new visitors */}
+      {showEmailPopup && !isPro && (
+        <div
+          onClick={() => { setShowEmailPopup(false); localStorage.setItem("bv_seen_popup", "true"); }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 200,
+            background: "rgba(8,6,3,0.88)", backdropFilter: "blur(8px)",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: "linear-gradient(145deg, #1a1508, #120f05)",
+              border: "1px solid rgba(160,136,64,0.3)", borderRadius: 20,
+              padding: "36px 28px", maxWidth: 380, width: "100%", textAlign: "center",
+              boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+              animation: "fadeIn 0.4s ease",
+            }}
+          >
+            <div style={{ fontSize: 24, color: "#a08840", marginBottom: 12 }}>✦</div>
+            <h2 style={{ fontSize: 20, fontWeight: 400, color: "#f0e6d0", margin: "0 0 10px" }}>
+              Get this in your inbox every morning
+            </h2>
+            <p style={{ fontSize: 14, color: "#8a7a5a", lineHeight: 1.7, margin: "0 0 20px" }}>
+              A verse and a story, free every day. No app. No church required. Just your inbox.
+            </p>
+            <a
+              href="http://eepurl.com/jDwmGM"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => { localStorage.setItem("bv_seen_popup", "true"); }}
+              style={{
+                display: "block", width: "100%", padding: "14px",
+                background: "linear-gradient(135deg, #c4982a, #a07820)",
+                borderRadius: 10, cursor: "pointer",
+                color: "#1a1205", fontSize: 15, fontWeight: 600,
+                letterSpacing: "0.05em", marginBottom: 12,
+                fontFamily: "Georgia, serif", textDecoration: "none",
+              }}
+            >
+              Sign Up Free →
+            </a>
+            <button
+              onClick={() => { setShowEmailPopup(false); localStorage.setItem("bv_seen_popup", "true"); }}
+              style={{ background: "none", border: "none", color: "#5a4a2a", fontSize: 13, cursor: "pointer" }}
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Persistent free signup banner at bottom for non-subscribers */}
+      {!isPro && (
+        <div style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 150,
+          background: "linear-gradient(135deg, #1a1205, #120f03)",
+          borderTop: "1px solid rgba(160,136,64,0.25)",
+          padding: "14px 20px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          gap: 12,
+        }}>
+          <div>
+            <div style={{ fontSize: 13, color: "#f0e6d0", fontWeight: 500 }}>Get this free every morning</div>
+            <div style={{ fontSize: 11, color: "#6a5a3a", marginTop: 2 }}>Daily verse + story in your inbox</div>
+          </div>
+          <a
+            href="http://eepurl.com/jDwmGM"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: "linear-gradient(135deg, #c4982a, #a07820)",
+              color: "#1a1205", fontSize: 13, fontWeight: 600,
+              padding: "10px 18px", borderRadius: 8,
+              textDecoration: "none", whiteSpace: "nowrap",
+              fontFamily: "Georgia, serif",
+            }}
+          >
+            Sign Up Free
+          </a>
+        </div>
+      )}
 
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
