@@ -195,20 +195,19 @@ export default function BibleApp() {
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: 600, margin: "0 auto", padding: "0 24px 60px" }}>
 
-        {/* Mother's Day Banner */}
+        {/* Gift banner */}
         <div style={{
-          background: "linear-gradient(135deg, rgba(160,136,64,0.15), rgba(120,80,60,0.1))",
-          border: "1px solid rgba(160,136,64,0.3)",
+          background: "linear-gradient(135deg, rgba(160,136,64,0.12), rgba(120,80,60,0.08))",
+          border: "1px solid rgba(160,136,64,0.25)",
           borderRadius: 10,
-          padding: "12px 20px",
+          padding: "10px 20px",
           textAlign: "center",
           marginTop: 20,
           marginBottom: -10,
-          cursor: "pointer",
-        }} onClick={handleCheckout}>
-          <div style={{ fontSize: 13, color: "#d4a840", letterSpacing: "0.06em" }}>
-            ✦ &nbsp; Looking for a meaningful Mother's Day gift? &nbsp;
-            <span style={{ textDecoration: "underline" }}>Gift DailyVerse →</span>
+        }}>
+          <div style={{ fontSize: 12, color: "#a08840", letterSpacing: "0.06em" }}>
+            ✦ &nbsp; Know someone who needs this? &nbsp;
+            <a href="/gift" style={{ color: "#d4a840", textDecoration: "underline" }}>Give DailyVerse as a gift →</a>
             &nbsp; ✦
           </div>
         </div>
@@ -279,6 +278,33 @@ export default function BibleApp() {
             {shareMsg || "Know someone who needs this today? Share →"}
           </button>
         </div>
+
+        {/* Testimonials — shown to non-pro users */}
+        {!isPro && (
+          <div style={{ marginBottom: 20 }}>
+            {[
+              "This has turned into a morning ritual where I ground myself with God before I do anything else.",
+              "I don't go to church as much as I used to — this is a nice way to feel like I'm still getting a little bit in.",
+              "My new favorite part of the morning.",
+            ].map((quote, i) => (
+              <div key={i} style={{
+                background: "rgba(30,24,14,0.6)",
+                border: "1px solid rgba(160,136,64,0.1)",
+                borderRadius: 10,
+                padding: "12px 16px",
+                marginBottom: 8,
+                display: "flex",
+                gap: 10,
+                alignItems: "flex-start",
+              }}>
+                <span style={{ color: "#a08840", fontSize: 14, marginTop: 1, flexShrink: 0 }}>✦</span>
+                <p style={{ fontSize: 13, lineHeight: 1.6, color: "#8a7a5a", margin: 0, fontStyle: "italic" }}>
+                  "{quote}"
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Usage indicator */}
         {!isPro && (
