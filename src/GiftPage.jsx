@@ -55,7 +55,7 @@ export default function GiftPage() {
           margin: "0 0 20px",
           letterSpacing: "-0.01em",
         }}>
-          Give her five minutes<br />of peace every morning.
+          A free daily devotional.<br />Every morning. For her.
         </h1>
 
         {/* Divider */}
@@ -78,42 +78,36 @@ export default function GiftPage() {
           marginLeft: "auto",
           marginRight: "auto",
         }}>
-          A verse from scripture and a story that stays with you —
-          delivered to her inbox every morning. No app. No church required.
+          A verse from scripture and a story that stays with her all day —
+          delivered free to her inbox every morning. No app. No church.
           Just her coffee and something worth reading.
         </p>
 
-        {/* Sample story teaser */}
-        <div style={{
-          background: "linear-gradient(145deg, rgba(40,32,20,0.8), rgba(28,22,14,0.9))",
-          border: "1px solid rgba(160,136,64,0.18)",
-          borderRadius: 14,
-          padding: "24px 28px",
-          marginBottom: 40,
-          textAlign: "left",
-        }}>
-          <div style={{
-            fontSize: 9, letterSpacing: "0.3em", color: "#a08840",
-            textTransform: "uppercase", marginBottom: 10,
-          }}>Today's story</div>
-          <p style={{
-            fontSize: 14, lineHeight: 1.8, color: "#c8b878",
-            margin: 0, fontStyle: "italic",
-          }}>
-            "Margaret sat in the waiting room of the Cancer Center with her hands
-            folded on top of her purse. She had come alone because that's how she'd
-            always done hard things — quietly, without asking..."
-          </p>
-          <div style={{
-            fontSize: 12, color: "#6a5a3a", marginTop: 12, letterSpacing: "0.06em",
-          }}>
-            ✦ &nbsp; Psalm 23:1 · Today's full devotional
-          </div>
+        {/* Testimonials */}
+        <div style={{ marginBottom: 40, display: "flex", flexDirection: "column", gap: 12 }}>
+          {[
+            { quote: "This has turned into a morning ritual where I ground myself with God before I do anything else.", attr: "DailyVerse reader" },
+            { quote: "I don't go to church as much as I used to — this is a nice way to feel like I'm still getting a little bit in.", attr: "DailyVerse reader" },
+            { quote: "My new favorite part of the morning.", attr: "DailyVerse reader" },
+          ].map((t, i) => (
+            <div key={i} style={{
+              background: "linear-gradient(145deg, rgba(40,32,20,0.8), rgba(28,22,14,0.9))",
+              border: "1px solid rgba(160,136,64,0.15)",
+              borderRadius: 12, padding: "18px 22px", textAlign: "left",
+            }}>
+              <p style={{ fontSize: 14, lineHeight: 1.75, color: "#c8b878", margin: "0 0 8px", fontStyle: "italic" }}>
+                "{t.quote}"
+              </p>
+              <div style={{ fontSize: 11, color: "#6a5a3a", letterSpacing: "0.08em" }}>— {t.attr}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Primary CTA — Gift subscription */}
+        {/* Primary CTA — Free signup */}
         <a
-          href={CHECKOUT_URL}
+          href={SIGNUP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           onMouseEnter={() => setHovering(true)}
           onMouseLeave={() => setHovering(false)}
           style={{
@@ -128,22 +122,22 @@ export default function GiftPage() {
             padding: "18px 32px",
             borderRadius: 12,
             textDecoration: "none",
-            marginBottom: 14,
+            marginBottom: 10,
             fontFamily: "Georgia, serif",
             transition: "all 0.2s ease",
             transform: hovering ? "translateY(-1px)" : "none",
             boxShadow: hovering ? "0 8px 24px rgba(160,136,64,0.2)" : "none",
           }}
         >
-          🎁 &nbsp; Gift a DailyVerse Subscription
+          Sign Up Free — Start Tomorrow Morning
         </a>
 
-        {/* Price note */}
+        {/* Free note */}
         <div style={{
           fontSize: 12, color: "#6a5a3a", marginBottom: 28,
           letterSpacing: "0.06em",
         }}>
-          $9.99 / month · 7-day free trial · Cancel anytime
+          Free forever · No credit card · Unsubscribe anytime
         </div>
 
         {/* Divider */}
@@ -151,14 +145,12 @@ export default function GiftPage() {
           fontSize: 12, color: "#4a3a22", marginBottom: 20,
           letterSpacing: "0.1em", textTransform: "uppercase",
         }}>
-          or
+          want to gift a subscription?
         </div>
 
-        {/* Secondary CTA — free signup */}
+        {/* Secondary CTA — paid gift */}
         <a
-          href={SIGNUP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={CHECKOUT_URL}
           style={{
             display: "block",
             background: "transparent",
@@ -175,7 +167,7 @@ export default function GiftPage() {
             transition: "all 0.2s ease",
           }}
         >
-          Sign up free — try it yourself first
+          🎁 &nbsp; Gift DailyVerse Pro — $9.99/month
         </a>
 
         {/* Social proof / trust */}
